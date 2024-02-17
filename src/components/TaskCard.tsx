@@ -1,66 +1,27 @@
-// src/components/TaskCard.tsx
-import React, {useState} from 'react';
-import {
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-  Animated,
-  View,
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Text, StyleSheet, TouchableOpacity, Animated, View} from 'react-native';
 import {Task} from '../types';
 import {useNavigation} from '@react-navigation/native';
 import {Swipeable} from 'react-native-gesture-handler';
 import {useSetRecoilState} from 'recoil';
 import {tasksAtom} from '../state/atoms';
 import Checkbox from './CheckBox';
+import {DustBinIcon} from '../assets/icons';
 
 interface TaskCardProps {
   task: Task;
 }
 
-const TaskCard: React.FC<TaskCardProps> = ({task}) => {
+const TaskCard = ({task}: TaskCardProps) => {
   const [bgColorAnim] = useState(new Animated.Value(0));
   const navigation = useNavigation();
-  // TODO: needed to implement overdue logic
-  const isOverdue = task.dueDate ? task.dueDate < new Date() : false;
   const setTasks = useSetRecoilState(tasksAtom);
 
   const handlePress = () => {
     navigation.navigate('TaskEdit', {taskId: task.id});
   };
 
-  const handleDeleteTask = () => {
-    Alert.alert(
-      'Delete Task',
-      'Are you sure you want to delete this task?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          onPress: () =>
-            setTasks(currentTasks =>
-              currentTasks.filter(t => t.id !== task.id),
-            ),
-          style: 'destructive',
-        },
-      ],
-      {cancelable: false},
-    );
-  };
-
-  const renderRightActions = () => {
-    return (
-      <TouchableOpacity onPress={handleDeleteTask} style={styles.deleteButton}>
-        <Text style={styles.deleteButtonText}>Delete</Text>
-      </TouchableOpacity>
-    );
-  };
-
-  React.useEffect(() => {
+  useEffect(() => {
     Animated.timing(bgColorAnim, {
       toValue: task.completed ? 1 : 0,
       duration: 300,
@@ -78,32 +39,100 @@ const TaskCard: React.FC<TaskCardProps> = ({task}) => {
 
   const backgroundColor = bgColorAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['#8A2BE2', '#D6F8D6'], // Change to desired colors
+    outputRange: ['#8A2BE2', '#D6F8D6'],
+  });
+
+  const swipeHintAnim = useState(new Animated.Value(0))[0]; // Starting at 0
+
+  const onLongPress = () => {
+    Animated.sequence([
+      Animated.timing(swipeHintAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+      Animated.timing(swipeHintAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  const handleDeleteTask = () => {
+    setTasks(currentTasks => currentTasks.filter(t => t.id !== task.id));
+  };
+
+  const renderRightActions = (progress, dragX) => {
+    const trans = dragX.interpolate({
+      inputRange: [0, 50, 100, 101],
+      outputRange: [-20, 0, 0, 1],
+    });
+
+    return (
+      <Animated.View style={{flex: 1, transform: [{translateX: trans}]}} />
+    );
+  };
+
+  const cardTranslateX = swipeHintAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -40],
   });
 
   return (
-    <Swipeable renderRightActions={renderRightActions}>
-      <Animated.View style={[styles.card, {backgroundColor}]}>
-        <View style={styles.content}>
-          <Checkbox isChecked={task.completed} onPress={handleToggleTask} />
-          <TouchableOpacity
-            onPress={handlePress}
-            delayPressIn={50}
-            // style={[styles.card, isOverdue && styles.overdue]}
-            accessibilityLabel="Tap to view task details"
-            accessibilityRole="button">
-            <Text style={styles.title}>{task.title}</Text>
-            <Text style={styles.description}>{task.description}</Text>
-            {task.dueDate && (
-              <Text style={styles.dueDate}>
-                {task.dueDate.toLocaleDateString()}
+    <>
+      <Swipeable
+        onSwipeableOpen={direction =>
+          direction === 'right' ? handleDeleteTask() : null
+        }
+        renderRightActions={renderRightActions}>
+        <Animated.View
+          style={[
+            styles.card,
+            {
+              backgroundColor: theme.cardBackground,
+              transform: [{translateX: cardTranslateX}],
+            },
+          ]}>
+          <View style={styles.content}>
+            <Checkbox isChecked={task.completed} onPress={handleToggleTask} />
+            <TouchableOpacity
+              onPress={handlePress}
+              onLongPress={onLongPress}
+              delayPressIn={50}
+              accessibilityLabel="Tap to view task details"
+              accessibilityRole="button"
+              style={styles.touchableArea}>
+              <Text numberOfLines={3} style={styles.title}>
+                {task.title}
               </Text>
-            )}
-          </TouchableOpacity>
-        </View>
-      </Animated.View>
-    </Swipeable>
+              <Text numberOfLines={1} style={styles.description}>
+                {task.description}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Animated.View>
+      </Swipeable>
+      <View style={styles.dustbinIconContainer}>
+        <DustBinIcon />
+      </View>
+    </>
   );
+};
+
+const theme = {
+  background: '#121212',
+  accent: '#FFA500',
+  textPrimary: '#FFFFFF',
+  textSecondary: '#B3B3B3',
+  iconActive: '#FFFFFF',
+  iconInactive: '#B3B3B3',
+  cardBackground: '#1E1E1E',
+  cardBorder: '#2D2D2D',
+  checkboxUnchecked: '#B3B3B3',
+  highPriority: '#FF1744',
+  mediumPriority: '#FFA500',
+  lowPriority: '#00E676',
 };
 
 const styles = StyleSheet.create({
@@ -114,36 +143,46 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
-  },
-  overdue: {
-    backgroundColor: '#FF69B4',
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#E5E5E5',
-  },
-  description: {
-    fontSize: 14,
-    color: '#E5E5E5',
-  },
-  dueDate: {
-    fontSize: 14,
-    color: '#FFD700',
-  },
-  deleteButton: {
-    justifyContent: 'center',
-    backgroundColor: 'red',
-    width: 100,
-  },
-  deleteButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    paddingHorizontal: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.cardBackground,
   },
   content: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
+  },
+  touchableArea: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: theme.textPrimary,
+  },
+  description: {
+    fontSize: 14,
+    color: theme.textSecondary,
+  },
+  dustbinIconContainer: {
+    position: 'absolute',
+    right: 0,
+    width: '12%',
+    height: '100%',
+    zIndex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  deleteButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'red',
+    width: 100,
+    height: '100%',
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
 
