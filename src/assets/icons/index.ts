@@ -1,4 +1,4 @@
 import DustBinIcon from './dustbin_icon.svg';
-import SwipeLeftIcon from './swipe_left_icon.svg';
+import PlusIcon from './plus_icon.svg';
 
-export {DustBinIcon, SwipeLeftIcon};
+export {DustBinIcon, PlusIcon};

@@ -6,7 +6,7 @@ import useClock from '../hooks/useClock';
 import {useRecoilValue} from 'recoil';
 import {tasksAtom} from '../state/atoms';
 import {useTheme} from '@react-navigation/native';
-import {DustBinIcon, PlusIcon} from '../assets/icons';
+import {DustBinIcon} from '../assets/icons';
 
 const HomeScreen: React.FC = () => {
   const currentTime = useClock();
@@ -18,7 +18,7 @@ const HomeScreen: React.FC = () => {
     <View style={[styles.container, {backgroundColor: colors.background}]}>
       <View style={styles.headerContainer}>
         <Text style={[styles.dateText, {color: colors.secondaryText}]}>
-          {currentTime}
+          UPCOMING
         </Text>
       </View>
       <FlatList
@@ -30,7 +30,7 @@ const HomeScreen: React.FC = () => {
       <TouchableOpacity
         style={[styles.createTaskButton, {backgroundColor: colors.accent}]}
         onPress={() => navigation.navigate('CreateTask')}>
-        <PlusIcon size={24} />
+        <DustBinIcon size={24} />
       </TouchableOpacity>
       {/* <TouchableOpacity
         // style={[styles.createTaskButton, {backgroundColor: colors.accent}]}

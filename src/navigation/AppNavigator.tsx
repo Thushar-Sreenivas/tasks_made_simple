@@ -7,6 +7,8 @@ import TaskCreationScreen from '../screens/TaskCreationScreen';
 import TaskEditingScreen from '../screens/TaskEditingScreen';
 import {MyDarkTheme, MyLightTheme} from '../theme/themeProvider';
 import {useColorScheme} from 'react-native';
+import DrawerNavigator from './DrawerNavigator';
+import RootNavigator from './RootNavigator';
 
 export type RootStackParamList = {
   Today: undefined;
@@ -32,15 +34,7 @@ const AppNavigator: React.FC = () => {
     <ThemeContext.Provider value={themeData}>
       <NavigationContainer
         theme={theme === 'dark' ? MyDarkTheme : MyLightTheme}>
-        <Stack.Navigator initialRouteName="Today">
-          <Stack.Screen name="Today" component={HomeScreen} />
-          <Stack.Screen
-            name="CreateTask"
-            component={TaskCreationScreen}
-            options={{title: 'Create Task'}}
-          />
-          <Stack.Screen name="TaskEdit" component={TaskEditingScreen} />
-        </Stack.Navigator>
+        <RootNavigator />
       </NavigationContainer>
     </ThemeContext.Provider>
   );
