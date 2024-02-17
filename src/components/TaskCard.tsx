@@ -2,16 +2,23 @@
 import React from 'react';
 import {Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Task} from '../types';
+import {useNavigation} from '@react-navigation/native';
 
 interface TaskCardProps {
   task: Task;
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({task}) => {
+  const navigation = useNavigation();
   const isOverdue = task.dueDate ? task.dueDate < new Date() : false;
+
+  const handlePress = () => {
+    navigation.navigate('TaskEdit', {taskId: task.id});
+  };
 
   return (
     <TouchableOpacity
+      onPress={handlePress}
       style={[styles.card, isOverdue && styles.overdue]}
       accessibilityLabel="Tap to view task details"
       accessibilityRole="button">
