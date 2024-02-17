@@ -1,8 +1,9 @@
 import React from 'react';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import {View, Text, StyleSheet, FlatList, Button} from 'react-native';
 import TaskCard from '../components/TaskCard';
 import useClock from '../hooks/useClock';
 import {Task} from '../types';
+import {useNavigation} from '@react-navigation/native';
 
 const mockTasks: Task[] = [
   {
@@ -23,6 +24,7 @@ const mockTasks: Task[] = [
 
 const HomeScreen: React.FC = () => {
   const currentTime = useClock();
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
@@ -32,6 +34,10 @@ const HomeScreen: React.FC = () => {
         renderItem={({item}) => <TaskCard task={item} />}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.list}
+      />
+      <Button
+        title="Create Task"
+        onPress={() => navigation.navigate('CreateTask')}
       />
     </View>
   );
