@@ -1,8 +1,11 @@
 // src/components/TaskCard.tsx
 import React from 'react';
-import {Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import {Task} from '../types';
 import {useNavigation} from '@react-navigation/native';
+import {Swipeable} from 'react-native-gesture-handler';
+import {useSetRecoilState} from 'recoil';
+import {tasksAtom} from '../state/atoms';
 
 interface TaskCardProps {
   task: Task;
@@ -11,23 +14,58 @@ interface TaskCardProps {
 const TaskCard: React.FC<TaskCardProps> = ({task}) => {
   const navigation = useNavigation();
   const isOverdue = task.dueDate ? task.dueDate < new Date() : false;
+  const setTasks = useSetRecoilState(tasksAtom);
 
   const handlePress = () => {
     navigation.navigate('TaskEdit', {taskId: task.id});
   };
 
+  const handleDeleteTask = () => {
+    Alert.alert(
+      'Delete Task',
+      'Are you sure you want to delete this task?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: () =>
+            setTasks(currentTasks =>
+              currentTasks.filter(t => t.id !== task.id),
+            ),
+          style: 'destructive',
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const renderRightActions = () => {
+    return (
+      <TouchableOpacity onPress={handleDeleteTask} style={styles.deleteButton}>
+        <Text style={styles.deleteButtonText}>Delete</Text>
+      </TouchableOpacity>
+    );
+  };
+
   return (
-    <TouchableOpacity
-      onPress={handlePress}
-      style={[styles.card, isOverdue && styles.overdue]}
-      accessibilityLabel="Tap to view task details"
-      accessibilityRole="button">
-      <Text style={styles.title}>{task.title}</Text>
-      <Text style={styles.description}>{task.description}</Text>
-      {task.dueDate && (
-        <Text style={styles.dueDate}>{task.dueDate.toLocaleDateString()}</Text>
-      )}
-    </TouchableOpacity>
+    <Swipeable renderRightActions={renderRightActions}>
+      <TouchableOpacity
+        onPress={handlePress}
+        style={[styles.card, isOverdue && styles.overdue]}
+        accessibilityLabel="Tap to view task details"
+        accessibilityRole="button">
+        <Text style={styles.title}>{task.title}</Text>
+        <Text style={styles.description}>{task.description}</Text>
+        {task.dueDate && (
+          <Text style={styles.dueDate}>
+            {task.dueDate.toLocaleDateString()}
+          </Text>
+        )}
+      </TouchableOpacity>
+    </Swipeable>
   );
 };
 
@@ -56,6 +94,16 @@ const styles = StyleSheet.create({
   dueDate: {
     fontSize: 14,
     color: '#FFD700',
+  },
+  deleteButton: {
+    justifyContent: 'center',
+    backgroundColor: 'red',
+    width: 100,
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    paddingHorizontal: 10,
   },
 });
 
