@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Text, StyleSheet, TouchableOpacity, Animated, View} from 'react-native';
 import {Task} from '../types';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 import {Swipeable} from 'react-native-gesture-handler';
 import {useSetRecoilState} from 'recoil';
 import {tasksAtom} from '../state/atoms';
@@ -16,6 +16,8 @@ const TaskCard = ({task}: TaskCardProps) => {
   const [bgColorAnim] = useState(new Animated.Value(0));
   const navigation = useNavigation();
   const setTasks = useSetRecoilState(tasksAtom);
+  const {colors} = useTheme();
+  const styles = getStyles(colors);
 
   const handlePress = () => {
     navigation.navigate('TaskEdit', {taskId: task.id});
@@ -82,6 +84,7 @@ const TaskCard = ({task}: TaskCardProps) => {
   return (
     <>
       <Swipeable
+        containerStyle={{zIndex: 2}}
         onSwipeableOpen={direction =>
           direction === 'right' ? handleDeleteTask() : null
         }
@@ -90,7 +93,7 @@ const TaskCard = ({task}: TaskCardProps) => {
           style={[
             styles.card,
             {
-              backgroundColor: theme.cardBackground,
+              backgroundColor: colors.cardBackground,
               transform: [{translateX: cardTranslateX}],
             },
           ]}>
@@ -120,70 +123,56 @@ const TaskCard = ({task}: TaskCardProps) => {
   );
 };
 
-const theme = {
-  background: '#121212',
-  accent: '#FFA500',
-  textPrimary: '#FFFFFF',
-  textSecondary: '#B3B3B3',
-  iconActive: '#FFFFFF',
-  iconInactive: '#B3B3B3',
-  cardBackground: '#1E1E1E',
-  cardBorder: '#2D2D2D',
-  checkboxUnchecked: '#B3B3B3',
-  highPriority: '#FF1744',
-  mediumPriority: '#FFA500',
-  lowPriority: '#00E676',
-};
-
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: 10,
-    padding: 16,
-    marginVertical: 8,
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: theme.cardBackground,
-  },
-  content: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  touchableArea: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: theme.textPrimary,
-  },
-  description: {
-    fontSize: 14,
-    color: theme.textSecondary,
-  },
-  dustbinIconContainer: {
-    position: 'absolute',
-    right: 0,
-    width: '12%',
-    height: '100%',
-    zIndex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  deleteButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'red',
-    width: 100,
-    height: '100%',
-  },
-  deleteButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-});
+const getStyles = colors =>
+  StyleSheet.create({
+    card: {
+      borderRadius: 10,
+      padding: 16,
+      marginVertical: 8,
+      shadowOffset: {width: 0, height: 2},
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.cardBackground,
+    },
+    content: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flex: 1,
+    },
+    touchableArea: {
+      flex: 1,
+    },
+    title: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: colors.primaryText,
+    },
+    description: {
+      fontSize: 14,
+      color: colors.secondaryText,
+    },
+    dustbinIconContainer: {
+      position: 'absolute',
+      right: 0,
+      width: '12%',
+      height: '100%',
+      zIndex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    deleteButton: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.priorityHigh,
+      width: 100,
+      height: '100%',
+    },
+    deleteButtonText: {
+      color: colors.primaryText,
+      fontWeight: 'bold',
+    },
+  });
 
 export default TaskCard;
