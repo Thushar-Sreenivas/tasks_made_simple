@@ -1,15 +1,27 @@
 // src/screens/TaskCreationScreen.tsx
 import React, {useState} from 'react';
 import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
+import {useSetRecoilState} from 'recoil';
+import {tasksAtom} from '../state/atoms';
+import {useNavigation} from '@react-navigation/native';
+import {Task} from '../types';
 
 const TaskCreationScreen: React.FC = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const setTasks = useSetRecoilState(tasksAtom);
+  const navigation = useNavigation();
 
   const handleSaveTask = () => {
-    // Logic to save the task
-    console.log('Task Saved:', title, description);
-    // Navigate back to the Home Screen or show success message
+    const newTask: Task = {
+      id: Date.now().toString(),
+      title,
+      description,
+      priority: 'low',
+    };
+
+    setTasks(oldTasks => [...oldTasks, newTask]);
+    navigation.goBack();
   };
 
   return (

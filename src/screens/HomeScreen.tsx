@@ -1,36 +1,22 @@
 import React from 'react';
 import {View, Text, StyleSheet, FlatList, Button} from 'react-native';
-import TaskCard from '../components/TaskCard';
-import useClock from '../hooks/useClock';
-import {Task} from '../types';
 import {useNavigation} from '@react-navigation/native';
 
-const mockTasks: Task[] = [
-  {
-    id: '1',
-    title: 'Finish React Native Project',
-    description: 'Implement all pending features and fix bugs.',
-    dueDate: new Date(new Date().getTime() + 86400000),
-    priority: 'high',
-  },
-  {
-    id: '2',
-    title: 'Grocery Shopping',
-    description: 'Milk, Eggs, Bread, and Butter.',
-    priority: 'low',
-  },
-  // Add more tasks as needed
-];
+import TaskCard from '../components/TaskCard';
+import useClock from '../hooks/useClock';
+import {useRecoilValue} from 'recoil';
+import {tasksAtom} from '../state/atoms';
 
 const HomeScreen: React.FC = () => {
   const currentTime = useClock();
   const navigation = useNavigation();
+  const tasks = useRecoilValue(tasksAtom);
 
   return (
     <View style={styles.container}>
       <Text style={styles.timeText}>{currentTime}</Text>
       <FlatList
-        data={mockTasks}
+        data={tasks}
         renderItem={({item}) => <TaskCard task={item} />}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.list}
