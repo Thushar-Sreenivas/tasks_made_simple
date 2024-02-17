@@ -1,45 +1,143 @@
-// src/components/DrawerContent.js
-import React from 'react';
-import {View, Text, Switch, Image} from 'react-native';
+// src/components/DrawerContent.tsx
+import React, {useContext} from 'react';
+import {View, Text, Switch, Image, StyleSheet} from 'react-native';
 import {
+  DrawerContentComponentProps,
   DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
 } from '@react-navigation/drawer';
 import {useTheme} from '@react-navigation/native';
 import {ThemeContext} from '../navigation/AppNavigator';
+import {StanImg} from '../assets/images';
 
-const DrawerContent = props => {
-  const {setTheme, theme} = React.useContext(ThemeContext);
+const DrawerContent: React.FC<DrawerContentComponentProps> = props => {
   const {colors} = useTheme();
+  const {theme, setTheme} = useContext(ThemeContext);
+  const isDarkMode = theme === 'dark';
+  const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
 
   return (
-    <DrawerContentScrollView {...props}>
-      <View style={{alignItems: 'center', padding: 20}}>
-        {/* User avatar and name */}
-        {/* <Image
-          source={require('../path-to-avatar.jpg')}
-          style={{width: 80, height: 80, borderRadius: 40}}
-        /> */}
-        <Text style={{color: colors.text, fontSize: 16, marginTop: 10}}>
-          Username
+    <DrawerContentScrollView
+      {...props}
+      style={{backgroundColor: colors.background}}>
+      <View style={styles.logoContainer}>
+        <Image source={StanImg} style={styles.profileImage} />
+        <Text style={[styles.userName, {color: colors.text}]}>
+          STAN Esports
         </Text>
-        {/* Dark mode toggle */}
-        <View
-          style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
-          <Text style={{color: colors.text, marginRight: 10}}>Dark Mode</Text>
-          <Switch
-            value={true}
-            onValueChange={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-          />
-        </View>
       </View>
-      <DrawerItemList {...props} />
-      {/* Placeholder for upcoming features */}
-      <DrawerItem label="Notifications (Coming soon)" onPress={() => {}} />
-      {/* ...other items */}
+
+      <View style={styles.toggleContainer}>
+        <Text style={[styles.toggleLabel, {color: colors.text}]}>
+          Dark Mode
+        </Text>
+        <Switch
+          value={isDarkMode}
+          onValueChange={toggleTheme}
+          thumbColor={isDarkMode ? '#FFA500' : '#757575'}
+          trackColor={{false: '#767577', true: '#FFA500'}}
+        />
+      </View>
+
+      <Text style={[styles.comingSoon, {color: colors.accent}]}>
+        Coming Soon
+      </Text>
+      {[
+        'User Authentication',
+        'Reminders and Notifications',
+        'Customizable Dashboard',
+        'Collaboration and Sharing',
+        'Search and Filters',
+        'Analytics and Task Insights',
+        'Widget Support',
+        'Cloud Sync',
+        'Voice Commands',
+        'Internationalization',
+      ].map((feature, index) => (
+        <Text
+          key={index}
+          style={[styles.featureItem, {color: colors.primaryText}]}>
+          {feature}
+        </Text>
+      ))}
     </DrawerContentScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  drawerHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    padding: 20,
+  },
+  profileImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: 'white',
+  },
+  userName: {
+    fontSize: 20,
+    marginTop: 15,
+  },
+  switchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+    paddingHorizontal: 20,
+  },
+  switchLabel: {
+    fontSize: 16,
+    marginRight: 10,
+  },
+  comingSoonHeader: {
+    padding: 20,
+    paddingTop: 30,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'red',
+  },
+  comingSoonList: {
+    paddingHorizontal: 20,
+  },
+  comingSoonItem: {
+    fontSize: 14,
+    margin: 0,
+    padding: 10,
+    opacity: 0.6,
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginTop: 16,
+    marginBottom: 20,
+  },
+  logo: {
+    width: 100,
+    height: 100,
+  },
+  toggleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    marginBottom: 22,
+  },
+  toggleLabel: {
+    fontSize: 16,
+  },
+  comingSoon: {
+    paddingHorizontal: 24,
+    marginBottom: 16,
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  featureItem: {
+    paddingHorizontal: 24,
+    marginBottom: 16,
+    fontSize: 14,
+    fontWeight: '400',
+    opacity: 0.7,
+  },
+});
 
 export default DrawerContent;
