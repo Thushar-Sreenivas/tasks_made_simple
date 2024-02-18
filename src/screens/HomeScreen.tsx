@@ -29,7 +29,7 @@ const HomeScreen: React.FC = () => {
       />
       <TouchableOpacity
         style={[styles.createTaskButton, {backgroundColor: colors.accent}]}
-        onPress={() => navigation.navigate('CreateTask')}>
+        onPress={() => navigation.navigate('CreateEditTask')}>
         <PlusIcon size={24} />
       </TouchableOpacity>
       {/* <TouchableOpacity

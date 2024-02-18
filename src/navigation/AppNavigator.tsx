@@ -1,24 +1,17 @@
 // src/navigation/AppNavigator.tsx
 import React, {createContext, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomeScreen from '../screens/HomeScreen';
-import TaskCreationScreen from '../screens/TaskCreationScreen';
-import TaskEditingScreen from '../screens/TaskEditingScreen';
 import {MyDarkTheme, MyLightTheme} from '../theme/themeProvider';
 import {useColorScheme} from 'react-native';
-import DrawerNavigator from './DrawerNavigator';
 import RootNavigator from './RootNavigator';
 
 export type RootStackParamList = {
   Today: undefined;
-  CreateTask: undefined;
+  CreateEditTask: undefined;
   TaskEdit: {
     taskId: string;
   };
 };
-
-const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const ThemeContext = createContext({
   theme: 'dark',
