@@ -4,7 +4,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import DrawerNavigator from './DrawerNavigator';
 import TaskCreateEditScreen from '../screens/TaskCreateEditScreen';
-import TaskEditingScreen from '../screens/TaskEditingScreen';
+import TaskDetailScreen from '../screens/TaskDetailScreen';
 
 const RootStack = createStackNavigator();
 
@@ -16,7 +16,7 @@ const RootNavigator: React.FC = () => {
         name="CreateEditTask"
         component={TaskCreateEditScreen}
       />
-      <RootStack.Screen name="TaskEdit" component={TaskEditingScreen} />
+      <RootStack.Screen name="TaskDetail" component={TaskDetailScreen} />
     </RootStack.Navigator>
   );
 };

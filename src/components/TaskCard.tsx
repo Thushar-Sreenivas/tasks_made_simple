@@ -20,7 +20,7 @@ const TaskCard = ({task}: TaskCardProps) => {
   const styles = getStyles(colors);
 
   const handlePress = () => {
-    navigation.navigate('CreateEditTask', {taskId: task.id});
+    navigation.navigate('TaskDetail', {taskId: task.id});
   };
 
   useEffect(() => {
