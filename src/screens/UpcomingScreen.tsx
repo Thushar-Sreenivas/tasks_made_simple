@@ -1,36 +1,27 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import TaskCard from '../components/TaskCard';
 import {useRecoilValue} from 'recoil';
 import {tasksAtom} from '../state/atoms';
 
-import {DustBinIcon, ListEmptyIcon} from '../assets/icons';
+import {PlusIcon} from '../assets/icons';
 import {isUpcoming} from '../utils/dateHelpers';
 import {useTheme} from '../hooks/useTheme';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigation/RootNavigator';
+import {ListEmptyComponent} from '../components/ListEmptyComponent';
 
-const HomeScreen: React.FC = () => {
+const UpcomingScreen: React.FC = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const tasks = useRecoilValue(tasksAtom);
-  const upcomingTasks = tasks.filter(task =>
-    isUpcoming(new Date(task.dueDate)),
+  const upcomingTasks = useMemo(
+    () =>
+      tasks.filter(task => task.dueDate && isUpcoming(new Date(task.dueDate))),
+    [tasks],
   );
-  const {colors} = useTheme();
 
-  const ListEmptyComponent = () => {
-    return (
-      <View style={styles.emptyContainer}>
-        <View style={styles.iconContainer}>
-          <ListEmptyIcon />
-        </View>
-        <Text style={[styles.emptyText, {color: colors.text}]}>
-          No upcoming tasks
-        </Text>
-      </View>
-    );
-  };
+  const {colors} = useTheme();
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
@@ -44,14 +35,16 @@ const HomeScreen: React.FC = () => {
         renderItem={({item}) => <TaskCard task={item} />}
         keyExtractor={item => item.id.toString()}
         contentContainerStyle={styles.list}
-        ListEmptyComponent={ListEmptyComponent}
+        ListEmptyComponent={
+          <ListEmptyComponent text="No upcoming tasks" color={colors.text} />
+        }
       />
       <TouchableOpacity
         style={[styles.createTaskButton, {backgroundColor: colors.accent}]}
         onPress={() =>
           navigation.navigate('CreateEditTask', {taskId: undefined})
         }>
-        <DustBinIcon size={24} />
+        <PlusIcon color={colors.background} width={40} height={40} />
       </TouchableOpacity>
     </View>
   );
@@ -87,16 +80,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 6,
   },
-  emptyContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: '25%',
-  },
-  emptyText: {
-    fontSize: 16,
-    marginTop: 10,
-  },
   iconContainer: {width: 240, height: 240},
 });
 
-export default HomeScreen;
+export default UpcomingScreen;

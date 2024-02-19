@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Text, StyleSheet, TouchableOpacity, Animated, View} from 'react-native';
 import {Task} from '../types';
-import {useNavigation, useTheme} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {Swipeable} from 'react-native-gesture-handler';
 import {useSetRecoilState} from 'recoil';
 import {tasksAtom} from '../state/atoms';
@@ -10,6 +10,7 @@ import {DustBinIcon} from '../assets/icons';
 import {priorityColors} from '../utils/constants';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigation/RootNavigator';
+import {useTheme} from '../hooks/useTheme';
 
 interface TaskCardProps {
   task: Task;
