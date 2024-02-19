@@ -7,22 +7,25 @@ import {useRecoilValue} from 'recoil';
 import {tasksAtom} from '../state/atoms';
 import {useTheme} from '@react-navigation/native';
 import {DustBinIcon} from '../assets/icons';
+import { isUpcoming } from '../utils/dateHelpers';
 
 const HomeScreen: React.FC = () => {
-  const currentTime = useClock();
   const navigation = useNavigation();
   const tasks = useRecoilValue(tasksAtom);
+  const upcomingTasks = tasks.filter(task =>
+    isUpcoming(new Date(task.dueDate)),
+  );
   const {colors} = useTheme();
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
       <View style={styles.headerContainer}>
-        <Text style={[styles.dateText, {color: colors.secondaryText}]}>
-          UPCOMING
+        <Text style={[styles.todayText, {color: colors.secondaryText}]}>
+          Upcoming
         </Text>
       </View>
       <FlatList
-        data={tasks}
+        data={upcomingTasks}
         renderItem={({item}) => <TaskCard task={item} />}
         keyExtractor={item => item.id.toString()}
         contentContainerStyle={styles.list}
@@ -32,11 +35,6 @@ const HomeScreen: React.FC = () => {
         onPress={() => navigation.navigate('CreateEditTask')}>
         <DustBinIcon size={24} />
       </TouchableOpacity>
-      {/* <TouchableOpacity
-        // style={[styles.createTaskButton, {backgroundColor: colors.accent}]}
-        onPress={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
-        <DustBinIcon size={24} />
-      </TouchableOpacity> */}
     </View>
   );
 };

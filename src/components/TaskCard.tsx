@@ -12,6 +12,12 @@ interface TaskCardProps {
   task: Task;
 }
 
+const priorityColors = {
+  low: '#00E676',
+  medium: '#FFA500',
+  high: '#FF1744',
+};
+
 const TaskCard = ({task}: TaskCardProps) => {
   const [bgColorAnim] = useState(new Animated.Value(0));
   const navigation = useNavigation();
@@ -41,10 +47,10 @@ const TaskCard = ({task}: TaskCardProps) => {
 
   const backgroundColor = bgColorAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['#8A2BE2', '#D6F8D6'],
+    outputRange: [colors.cardBackground, '#D6F8D6'],
   });
 
-  const swipeHintAnim = useState(new Animated.Value(0))[0]; // Starting at 0
+  const swipeHintAnim = useState(new Animated.Value(0))[0];
 
   const onLongPress = () => {
     Animated.sequence([
@@ -93,12 +99,16 @@ const TaskCard = ({task}: TaskCardProps) => {
           style={[
             styles.card,
             {
-              backgroundColor: colors.cardBackground,
+              backgroundColor: backgroundColor,
               transform: [{translateX: cardTranslateX}],
             },
           ]}>
           <View style={styles.content}>
-            <Checkbox isChecked={task.completed} onPress={handleToggleTask} />
+            <Checkbox
+              isChecked={task.completed}
+              onPress={handleToggleTask}
+              color={priorityColors[task.priority]}
+            />
             <TouchableOpacity
               onPress={handlePress}
               onLongPress={onLongPress}
@@ -106,7 +116,9 @@ const TaskCard = ({task}: TaskCardProps) => {
               accessibilityLabel="Tap to view task details"
               accessibilityRole="button"
               style={styles.touchableArea}>
-              <Text numberOfLines={3} style={styles.title}>
+              <Text
+                numberOfLines={3}
+                style={[styles.title, task.completed && styles.titleCompleted]}>
                 {task.title}
               </Text>
               <Text numberOfLines={1} style={styles.description}>
@@ -148,6 +160,11 @@ const getStyles = colors =>
       fontSize: 16,
       fontWeight: 'bold',
       color: colors.primaryText,
+      textDecorationLine: 'none',
+    },
+    titleCompleted: {
+      textDecorationLine: 'line-through',
+      color: colors.secondaryText,
     },
     description: {
       fontSize: 14,

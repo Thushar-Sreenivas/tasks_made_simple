@@ -9,7 +9,9 @@ interface CheckboxProps {
 
 const Checkbox: React.FC<CheckboxProps> = ({isChecked, onPress, color}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.checkbox}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.checkbox, {borderColor: color}]}>
       {isChecked && (
         <View style={[styles.checkedCircle, {backgroundColor: color}]} />
       )}
@@ -22,7 +24,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    borderWidth: 2,
+    borderWidth: 3,
     borderColor: '#B3B3B3',
     justifyContent: 'center',
     alignItems: 'center',
