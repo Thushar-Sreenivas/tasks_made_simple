@@ -6,7 +6,7 @@ import useClock from '../hooks/useClock';
 import {useRecoilValue} from 'recoil';
 import {tasksAtom} from '../state/atoms';
 import {useTheme} from '@react-navigation/native';
-import {PlusIcon} from '../assets/icons';
+import {ListEmptyIcon, PlusIcon} from '../assets/icons';
 import {isToday} from '../utils/dateHelpers';
 
 const HomeScreen: React.FC = () => {
@@ -15,6 +15,19 @@ const HomeScreen: React.FC = () => {
   const tasks = useRecoilValue(tasksAtom);
   const todaysTasks = tasks.filter(task => isToday(new Date(task.dueDate)));
   const {colors} = useTheme();
+
+  const ListEmptyComponent = () => {
+    return (
+      <View style={styles.emptyContainer}>
+        <View style={styles.iconContainer}>
+          <ListEmptyIcon />
+        </View>
+        <Text style={[styles.emptyText, {color: colors.text}]}>
+          No upcoming tasks
+        </Text>
+      </View>
+    );
+  };
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
@@ -31,6 +44,7 @@ const HomeScreen: React.FC = () => {
         renderItem={({item}) => <TaskCard task={item} />}
         keyExtractor={item => item.id.toString()}
         contentContainerStyle={styles.list}
+        ListEmptyComponent={ListEmptyComponent}
       />
       <TouchableOpacity
         style={[styles.createTaskButton, {backgroundColor: colors.accent}]}
@@ -75,6 +89,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 6,
   },
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: '25%',
+  },
+  emptyText: {
+    fontSize: 16,
+    marginTop: 10,
+  },
+  iconContainer: {width: 240, height: 240},
 });
 
 export default HomeScreen;
