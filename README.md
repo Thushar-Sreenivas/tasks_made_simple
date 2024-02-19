@@ -1,4 +1,4 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+This is a Task Organiser App called TasksMadeSimple, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
 
@@ -46,34 +46,55 @@ If everything is set up _correctly_, you should see your new app running in your
 
 This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
 
-## Step 3: Modifying your App
+# Implementation Spec for TasksMadeSimple
 
-Now that you have successfully run the app, let's modify it.
+## Overview
+TasksMadeSimple is a productivity app designed to help users manage their daily tasks efficiently. The app provides a clean, intuitive interface that supports light and dark modes and features two main views: Today and Upcoming, to categorize tasks by their due dates. 
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+## Features
+- **Today View**: Displays tasks due today, allowing users to view and complete tasks in a timely manner.
+- **Upcoming View**: Shows tasks with future due dates, helping users plan ahead.
+- **Swipe to Delete**: Users can easily delete tasks by swiping, providing a smooth, interactive task management experience.
+- **Long Press Animation**: Offers a hint animation on long press, suggesting the swipe action for task completion.
+- **Task Completion**: Tasks can be marked as completed with an animation changing the task's color to signify its status.
+- **Task Creation**: Users can add new tasks using a floating action button.
+- **Task Detail View**: Provides detailed information about the task and allows users to edit or delete the task.
+- **Dark Mode Toggle**: A drawer feature enabling users to switch between light and dark mode for better visibility according to preference.
+- **Feature Roadmap**: A list of upcoming features is provided in the drawer to inform users about future updates.
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+## Technical Architecture
+- **React Native**: The app is built using React Native, enabling cross-platform compatibility while maintaining high performance.
+- **Recoil**: Used for state management to handle the app’s dynamic data efficiently.
+- **React Navigation**: Manages the app's navigation stack, providing seamless transitions between screens.
+- **React Native Reanimated**: Powers the smooth animations throughout the app.
+- **DateTimePicker**: Allows users to select due dates for their tasks.
 
-## Congratulations! :tada:
+## Future Enhancements
+- User Authentication: To enable personalized task management.
+- Reminders and Notifications: For timely alerts on task deadlines.
+- Customizable Dashboard: Allowing users to personalize their task management interface.
+- Collaboration and Sharing: To manage tasks with other users.
+- Search and Filters: For efficient retrieval of tasks.
+- Analytics and Task Insights: Offering overviews of task completion trends.
+- Widget Support: Quick access to tasks from the home screen.
+- Cloud Sync: To ensure task data is available across multiple devices.
+- Voice Commands: For hands-free task management.
+- Internationalization: To support multiple languages.
 
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## Dependencies
+- "@react-native-community/datetimepicker": "^7.6.2"
+- "@react-navigation/bottom-tabs": "^6.5.12"
+- "@react-navigation/drawer": "^6.6.7"
+- "@react-navigation/native": "^6.1.10"
+- "@react-navigation/native-stack": "^6.9.18"
+- "@react-navigation/stack": "^6.3.21"
+- "react": "18.2.0"
+- "react-native": "0.73.4"
+- "react-native-gesture-handler": "^2.15.0"
+- "react-native-mmkv": "^2.12.1"
+- "react-native-reanimated": "^3.7.0"
+- "react-native-safe-area-context": "^4.9.0"
+- "react-native-screens": "^3.29.0"
+- "react-native-svg": "^14.1.0"
+- "react-native-svg-transformer": "^1.3.0"
+- "recoil": "^0.7.7"

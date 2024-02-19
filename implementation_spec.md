@@ -50,7 +50,3 @@ TasksMadeSimple is a productivity app designed to help users manage their daily 
 - "react-native-svg": "^14.1.0"
 - "react-native-svg-transformer": "^1.3.0"
 - "recoil": "^0.7.7"
-
-## Build and Deployment
-- **iOS**: A development build for testing on iOS devices will be distributed via Diawi. Production builds will be available through the App Store.
-- **Android**: Development APKs will be provided for testing purposes, with production builds released on the Google Play Store.
