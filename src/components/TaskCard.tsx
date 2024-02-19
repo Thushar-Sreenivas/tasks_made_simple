@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {Text, StyleSheet, TouchableOpacity, Animated, View} from 'react-native';
 import {Task} from '../types';
 import {useNavigation} from '@react-navigation/native';
@@ -17,7 +17,7 @@ interface TaskCardProps {
 }
 
 const TaskCard = ({task}: TaskCardProps) => {
-  const [bgColorAnim] = useState(new Animated.Value(0));
+  const bgColorAnim = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const setTasks = useSetRecoilState(tasksAtom);
   const {colors} = useTheme();
@@ -33,7 +33,7 @@ const TaskCard = ({task}: TaskCardProps) => {
       duration: 300,
       useNativeDriver: false,
     }).start();
-  }, [task.completed, bgColorAnim]);
+  }, [bgColorAnim, task.completed]);
 
   const handleToggleTask = () => {
     setTasks(currentTasks =>
@@ -69,14 +69,21 @@ const TaskCard = ({task}: TaskCardProps) => {
     setTasks(currentTasks => currentTasks.filter(t => t.id !== task.id));
   };
 
-  const renderRightActions = (progress, dragX) => {
+  const renderRightActions = (
+    progress: any,
+    dragX: {
+      interpolate: (arg0: {inputRange: number[]; outputRange: number[]}) => any;
+    },
+  ) => {
     const trans = dragX.interpolate({
       inputRange: [0, 50, 100, 101],
       outputRange: [-20, 0, 0, 1],
     });
 
     return (
-      <Animated.View style={{flex: 1, transform: [{translateX: trans}]}} />
+      <Animated.View
+        style={[styles.animatedContainer, {transform: [{translateX: trans}]}]}
+      />
     );
   };
 
@@ -88,7 +95,7 @@ const TaskCard = ({task}: TaskCardProps) => {
   return (
     <>
       <Swipeable
-        containerStyle={{zIndex: 2}}
+        containerStyle={styles.container}
         onSwipeableOpen={direction =>
           direction === 'right' ? handleDeleteTask() : null
         }
@@ -127,7 +134,7 @@ const TaskCard = ({task}: TaskCardProps) => {
         </Animated.View>
       </Swipeable>
       <View style={styles.dustbinIconContainer}>
-        <DustBinIcon />
+        <DustBinIcon color={colors.primaryText} />
       </View>
     </>
   );
@@ -135,6 +142,12 @@ const TaskCard = ({task}: TaskCardProps) => {
 
 const getStyles = colors =>
   StyleSheet.create({
+    container: {
+      zIndex: 2,
+    },
+    animatedContainer: {
+      flex: 1,
+    },
     card: {
       borderRadius: 10,
       padding: 16,
