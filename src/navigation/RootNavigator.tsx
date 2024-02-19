@@ -5,7 +5,17 @@ import DrawerNavigator from './DrawerNavigator';
 import TaskCreateEditScreen from '../screens/TaskCreateEditScreen';
 import TaskDetailScreen from '../screens/TaskDetailScreen';
 
-const RootStack = createStackNavigator();
+export type RootStackParamList = {
+  Drawer: undefined;
+  CreateEditTask: {
+    taskId?: string;
+  };
+  TaskDetail: {
+    taskId: string;
+  };
+};
+
+const RootStack = createStackNavigator<RootStackParamList>();
 
 const RootNavigator: React.FC = () => {
   return (
@@ -14,8 +24,13 @@ const RootNavigator: React.FC = () => {
       <RootStack.Screen
         name="CreateEditTask"
         component={TaskCreateEditScreen}
+        initialParams={{taskId: undefined}}
       />
-      <RootStack.Screen name="TaskDetail" component={TaskDetailScreen} />
+      <RootStack.Screen
+        name="TaskDetail"
+        component={TaskDetailScreen}
+        initialParams={{taskId: ''}}
+      />
     </RootStack.Navigator>
   );
 };

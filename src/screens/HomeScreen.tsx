@@ -9,10 +9,12 @@ import {tasksAtom} from '../state/atoms';
 import {ListEmptyIcon, PlusIcon} from '../assets/icons';
 import {isToday} from '../utils/dateHelpers';
 import {useTheme} from '../hooks/useTheme';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigation/RootNavigator';
 
 const HomeScreen: React.FC = () => {
   const currentTime = useClock();
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const tasks = useRecoilValue(tasksAtom);
   const todaysTasks = tasks.filter(task => isToday(new Date(task.dueDate)));
   const {colors} = useTheme();
@@ -49,7 +51,9 @@ const HomeScreen: React.FC = () => {
       />
       <TouchableOpacity
         style={[styles.createTaskButton, {backgroundColor: colors.accent}]}
-        onPress={() => navigation.navigate('CreateEditTask')}>
+        onPress={() =>
+          navigation.navigate('CreateEditTask', {taskId: undefined})
+        }>
         <PlusIcon size={24} />
       </TouchableOpacity>
     </View>

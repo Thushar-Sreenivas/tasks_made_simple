@@ -8,6 +8,8 @@ import {tasksAtom} from '../state/atoms';
 import Checkbox from './CheckBox';
 import {DustBinIcon} from '../assets/icons';
 import {priorityColors} from '../utils/constants';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigation/RootNavigator';
 
 interface TaskCardProps {
   task: Task;
@@ -15,7 +17,7 @@ interface TaskCardProps {
 
 const TaskCard = ({task}: TaskCardProps) => {
   const [bgColorAnim] = useState(new Animated.Value(0));
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const setTasks = useSetRecoilState(tasksAtom);
   const {colors} = useTheme();
   const styles = getStyles(colors);

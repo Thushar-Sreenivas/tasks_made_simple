@@ -4,14 +4,6 @@ import {useColorScheme} from 'react-native';
 import RootNavigator from './RootNavigator';
 import {MyDarkTheme, MyLightTheme} from '../theme/themeProvider';
 
-export type RootStackParamList = {
-  Today: undefined;
-  CreateEditTask: undefined;
-  TaskEdit: {
-    taskId: string;
-  };
-};
-
 export interface ThemeContextType {
   theme: 'light' | 'dark';
   setTheme: (theme: 'light' | 'dark') => void;

@@ -8,9 +8,11 @@ import {tasksAtom} from '../state/atoms';
 import {DustBinIcon, ListEmptyIcon} from '../assets/icons';
 import {isUpcoming} from '../utils/dateHelpers';
 import {useTheme} from '../hooks/useTheme';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigation/RootNavigator';
 
 const HomeScreen: React.FC = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const tasks = useRecoilValue(tasksAtom);
   const upcomingTasks = tasks.filter(task =>
     isUpcoming(new Date(task.dueDate)),
@@ -46,7 +48,9 @@ const HomeScreen: React.FC = () => {
       />
       <TouchableOpacity
         style={[styles.createTaskButton, {backgroundColor: colors.accent}]}
-        onPress={() => navigation.navigate('CreateEditTask')}>
+        onPress={() =>
+          navigation.navigate('CreateEditTask', {taskId: undefined})
+        }>
         <DustBinIcon size={24} />
       </TouchableOpacity>
     </View>

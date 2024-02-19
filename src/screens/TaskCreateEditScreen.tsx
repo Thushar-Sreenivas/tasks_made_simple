@@ -13,12 +13,14 @@ import {useSetRecoilState, useRecoilValue} from 'recoil';
 import {tasksAtom} from '../state/atoms';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import {priorityColors} from '../utils/constants';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigation/RootNavigator';
 
 const TaskCreateEditScreen: React.FC = () => {
   const route = useRoute();
   const tasks = useRecoilValue(tasksAtom);
   const setTasks = useSetRecoilState(tasksAtom);
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
   const [showDatePicker, setShowDatePicker] = useState(false);
 

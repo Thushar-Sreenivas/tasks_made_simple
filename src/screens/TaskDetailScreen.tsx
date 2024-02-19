@@ -11,6 +11,8 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import {priorityColors} from '../utils/constants';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigation/RootNavigator';
 
 type ParamList = {
   TaskDetail: {
@@ -21,7 +23,7 @@ type ParamList = {
 const TaskDetailScreen: React.FC = () => {
   const [tasks, setTasks] = useRecoilState(tasksAtom);
   const [task, setTask] = useState<Task | null>(null);
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<ParamList, 'TaskDetail'>>();
   const {colors} = useTheme();
   const styles = getStyles(colors);
@@ -34,9 +36,8 @@ const TaskDetailScreen: React.FC = () => {
   }, [tasks, route.params.taskId]);
 
   const handleEdit = () => {
-    // Navigate to the TaskCreationScreen with the task to be edited
     if (task) {
-      navigation.navigate('CreateEditTask', task.id);
+      navigation.navigate('CreateEditTask', {taskId: task.id});
     }
   };
 
