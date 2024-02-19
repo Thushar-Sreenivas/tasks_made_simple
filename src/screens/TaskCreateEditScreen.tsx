@@ -12,12 +12,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {useSetRecoilState, useRecoilValue} from 'recoil';
 import {tasksAtom} from '../state/atoms';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
-
-const priorityColors = {
-  low: '#00E676',
-  medium: '#FFA500',
-  high: '#FF1744',
-};
+import {priorityColors} from '../utils/constants';
 
 const TaskCreateEditScreen: React.FC = () => {
   const route = useRoute();

@@ -1,6 +1,5 @@
 // src/navigation/RootNavigator.tsx
 import React from 'react';
-// src/navigation/RootNavigator.tsx
 import {createStackNavigator} from '@react-navigation/stack';
 import DrawerNavigator from './DrawerNavigator';
 import TaskCreateEditScreen from '../screens/TaskCreateEditScreen';

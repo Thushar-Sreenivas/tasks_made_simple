@@ -10,17 +10,12 @@ import {
   RouteProp,
   useTheme,
 } from '@react-navigation/native';
+import {priorityColors} from '../utils/constants';
 
 type ParamList = {
   TaskDetail: {
     taskId: string;
   };
-};
-
-const priorityColors = {
-  low: '#00E676',
-  medium: '#FFA500',
-  high: '#FF1744',
 };
 
 const TaskDetailScreen: React.FC = () => {

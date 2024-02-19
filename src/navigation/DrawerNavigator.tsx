@@ -1,11 +1,18 @@
 // src/navigation/DrawerNavigator.tsx
 import React from 'react';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import {
+  DrawerContentComponentProps,
+  createDrawerNavigator,
+} from '@react-navigation/drawer';
 import BottomTabs from './BottomsTabs';
 import DrawerContent from '../components/DrawerContent';
-import {useTheme} from '@react-navigation/native';
+import {useTheme} from '../hooks/useTheme';
 
 const Drawer = createDrawerNavigator();
+
+const CustomDrawerContent = (props: DrawerContentComponentProps) => {
+  return <DrawerContent {...props} />;
+};
 
 const DrawerNavigator: React.FC = () => {
   const {colors} = useTheme();
@@ -15,7 +22,7 @@ const DrawerNavigator: React.FC = () => {
         headerTintColor: colors.accent,
         headerTitleStyle: {color: colors.primaryText},
       }}
-      drawerContent={props => <DrawerContent {...props} />}>
+      drawerContent={CustomDrawerContent}>
       <Drawer.Screen name="TasksMadeSimple" component={BottomTabs} />
     </Drawer.Navigator>
   );

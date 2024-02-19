@@ -5,22 +5,24 @@ import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
-import {useTheme} from '@react-navigation/native';
-import {ThemeContext} from '../navigation/AppNavigator';
+import {ThemeContext, ThemeContextType} from '../navigation/AppNavigator';
 import {StanImg} from '../assets/images';
+import {useTheme} from '../hooks/useTheme';
 
 const DrawerContent: React.FC<DrawerContentComponentProps> = props => {
   const {colors} = useTheme();
-  const {theme, setTheme} = useContext(ThemeContext);
+  const {theme, setTheme} = useContext<ThemeContextType>(ThemeContext);
   const isDarkMode = theme === 'dark';
-  const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
+  const toggleTheme = () => setTheme(isDarkMode ? 'light' : 'dark');
 
   return (
     <DrawerContentScrollView
       {...props}
       style={{backgroundColor: colors.background}}>
       <View style={styles.logoContainer}>
-        <Image source={StanImg} style={styles.profileImage} />
+        {StanImg ? (
+          <Image source={StanImg} style={styles.profileImage} />
+        ) : null}
         <Text style={[styles.userName, {color: colors.text}]}>
           STAN Esports
         </Text>
@@ -52,9 +54,9 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = props => {
         'Cloud Sync',
         'Voice Commands',
         'Internationalization',
-      ].map((feature, index) => (
+      ].map(feature => (
         <Text
-          key={index}
+          key={feature}
           style={[styles.featureItem, {color: colors.primaryText}]}>
           {feature}
         </Text>

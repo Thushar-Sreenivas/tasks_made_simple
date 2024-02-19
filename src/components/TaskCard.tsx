@@ -7,16 +7,11 @@ import {useSetRecoilState} from 'recoil';
 import {tasksAtom} from '../state/atoms';
 import Checkbox from './CheckBox';
 import {DustBinIcon} from '../assets/icons';
+import {priorityColors} from '../utils/constants';
 
 interface TaskCardProps {
   task: Task;
 }
-
-const priorityColors = {
-  low: '#00E676',
-  medium: '#FFA500',
-  high: '#FF1744',
-};
 
 const TaskCard = ({task}: TaskCardProps) => {
   const [bgColorAnim] = useState(new Animated.Value(0));

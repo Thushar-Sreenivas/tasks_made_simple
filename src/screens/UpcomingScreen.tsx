@@ -2,12 +2,12 @@ import React from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import TaskCard from '../components/TaskCard';
-import useClock from '../hooks/useClock';
 import {useRecoilValue} from 'recoil';
 import {tasksAtom} from '../state/atoms';
-import {useTheme} from '@react-navigation/native';
+
 import {DustBinIcon, ListEmptyIcon} from '../assets/icons';
 import {isUpcoming} from '../utils/dateHelpers';
+import {useTheme} from '../hooks/useTheme';
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation();

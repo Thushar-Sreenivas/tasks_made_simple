@@ -1,13 +1,13 @@
-export const isToday = someDate => {
+export const isToday = (date: Date) => {
   const today = new Date();
   return (
-    someDate.getDate() === today.getDate() &&
-    someDate.getMonth() === today.getMonth() &&
-    someDate.getFullYear() === today.getFullYear()
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
   );
 };
 
-export const isUpcoming = someDate => {
+export const isUpcoming = (date: Date) => {
   const today = new Date();
-  return someDate > today;
+  return date > today;
 };

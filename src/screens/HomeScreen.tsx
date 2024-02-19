@@ -5,9 +5,10 @@ import TaskCard from '../components/TaskCard';
 import useClock from '../hooks/useClock';
 import {useRecoilValue} from 'recoil';
 import {tasksAtom} from '../state/atoms';
-import {useTheme} from '@react-navigation/native';
+
 import {ListEmptyIcon, PlusIcon} from '../assets/icons';
 import {isToday} from '../utils/dateHelpers';
+import {useTheme} from '../hooks/useTheme';
 
 const HomeScreen: React.FC = () => {
   const currentTime = useClock();

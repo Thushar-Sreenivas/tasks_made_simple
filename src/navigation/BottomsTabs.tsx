@@ -4,14 +4,18 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import TodayScreen from '../screens/HomeScreen';
 import UpcomingScreen from '../screens/UpcomingScreen';
 import {TodayIcon, UpcomingIcon} from '../assets/icons/index';
-import {useTheme} from '@react-navigation/native';
+
 import {StyleSheet, View} from 'react-native';
+import {useTheme} from '../hooks/useTheme';
 
 const Tab = createBottomTabNavigator();
 const BottomTabs: React.FC = () => {
   const {colors} = useTheme();
 
-  const renderTabBarIcon = (screenName: string, focused: boolean) => {
+  const renderTabBarIcon = (
+    screenName: 'Today' | 'Upcoming',
+    focused: boolean,
+  ) => {
     const IconComponent = screenName === 'Today' ? TodayIcon : UpcomingIcon;
     return (
       <View style={styles.iconContainer}>

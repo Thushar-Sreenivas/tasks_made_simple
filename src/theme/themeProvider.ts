@@ -1,6 +1,21 @@
-import {DefaultTheme, DarkTheme} from '@react-navigation/native';
+import {DefaultTheme, DarkTheme, Theme} from '@react-navigation/native';
 
-export const MyLightTheme = {
+export type MyTheme = Theme & {
+  colors: {
+    primaryText: string;
+    secondaryText: string;
+    accent: string;
+    cardBackground: string;
+    cardBorder: string;
+    iconActive: string;
+    iconInactive: string;
+    priorityHigh: string;
+    priorityMedium: string;
+    priorityLow: string;
+  };
+};
+
+export const MyLightTheme: MyTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
@@ -18,7 +33,7 @@ export const MyLightTheme = {
   },
 };
 
-export const MyDarkTheme = {
+export const MyDarkTheme: MyTheme = {
   ...DarkTheme,
   colors: {
     ...DarkTheme.colors,

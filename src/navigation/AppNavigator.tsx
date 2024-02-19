@@ -1,9 +1,8 @@
-// src/navigation/AppNavigator.tsx
 import React, {createContext, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {MyDarkTheme, MyLightTheme} from '../theme/themeProvider';
 import {useColorScheme} from 'react-native';
 import RootNavigator from './RootNavigator';
+import {MyDarkTheme, MyLightTheme} from '../theme/themeProvider';
 
 export type RootStackParamList = {
   Today: undefined;
@@ -13,15 +12,28 @@ export type RootStackParamList = {
   };
 };
 
-export const ThemeContext = createContext({
+export interface ThemeContextType {
+  theme: 'light' | 'dark';
+  setTheme: (theme: 'light' | 'dark') => void;
+}
+
+const defaultThemeValue: ThemeContextType = {
   theme: 'dark',
   setTheme: () => {},
-});
+};
+
+export const ThemeContext = createContext<ThemeContextType>(defaultThemeValue);
 
 const AppNavigator: React.FC = () => {
   const scheme = useColorScheme();
-  const [theme, setTheme] = useState(scheme);
-  const themeData = {theme, setTheme};
+  const [theme, setTheme] = useState<'light' | 'dark'>(
+    scheme === 'dark' ? 'dark' : 'light',
+  );
+
+  const themeData: ThemeContextType = {
+    theme,
+    setTheme,
+  };
 
   return (
     <ThemeContext.Provider value={themeData}>
