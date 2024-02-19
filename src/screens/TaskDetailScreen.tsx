@@ -9,6 +9,7 @@ import {
   useRoute,
   RouteProp,
   useTheme,
+  Theme,
 } from '@react-navigation/native';
 import {priorityColors} from '../utils/constants';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -21,7 +22,7 @@ type ParamList = {
 };
 
 const TaskDetailScreen: React.FC = () => {
-  const [tasks, setTasks] = useRecoilState(tasksAtom);
+  const [tasks, setTasks] = useRecoilState<Task[]>(tasksAtom);
   const [task, setTask] = useState<Task | null>(null);
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<ParamList, 'TaskDetail'>>();
@@ -66,21 +67,28 @@ const TaskDetailScreen: React.FC = () => {
     );
   }
 
-  const formatDate = dateString => {
-    const options = {year: 'numeric', month: 'long', day: 'numeric'};
+  const formatDate = (dateString: Date): string => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  // Helper function to format the time
-  const formatTime = dateString => {
-    const options = {hour: '2-digit', minute: '2-digit', hour12: true};
+  const formatTime = (dateString: Date): string => {
+    const options: Intl.DateTimeFormatOptions = {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    };
     return new Date(dateString).toLocaleTimeString(undefined, options);
   };
 
-  const formattedDueDate = task.dueDate
+  const formattedDueDate: string = task.dueDate
     ? formatDate(task.dueDate)
     : 'No due date set';
-  const formattedDueTime = task.dueDate ? formatTime(task.dueDate) : '';
+  const formattedDueTime: string = task.dueDate ? formatTime(task.dueDate) : '';
 
   return (
     <View style={styles.container}>
@@ -102,7 +110,7 @@ const TaskDetailScreen: React.FC = () => {
       </View>
 
       <Text style={styles.headerLabel}>Due Date:</Text>
-      <View style={{flexDirection: 'row'}}>
+      <View style={styles.timeContainer}>
         <Text style={styles.textValue}>{formattedDueDate}</Text>
         <Text style={styles.textValue}>{formattedDueTime}</Text>
       </View>
@@ -123,12 +131,15 @@ const TaskDetailScreen: React.FC = () => {
   );
 };
 
-const getStyles = colors =>
+const getStyles = (colors: Theme['colors']) =>
   StyleSheet.create({
     container: {
       flex: 1,
       padding: 16,
       backgroundColor: colors.background,
+    },
+    timeContainer: {
+      flexDirection: 'row',
     },
     headerLabel: {
       fontSize: 16,
@@ -139,18 +150,17 @@ const getStyles = colors =>
     textValue: {
       fontSize: 16,
       color: colors.text,
-      marginBottom: 8,
       marginRight: 4,
     },
     priorityContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: 8,
+      marginVertical: 8,
     },
     priorityIndicator: {
-      width: 12,
-      height: 12,
-      borderRadius: 6,
+      width: 20,
+      height: 20,
+      borderRadius: 12,
       marginRight: 8,
     },
     buttonContainer: {

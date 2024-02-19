@@ -1,5 +1,5 @@
 // src/screens/TaskCreateEditScreen.tsx
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -7,34 +7,48 @@ import {
   TouchableOpacity,
   StyleSheet,
   Platform,
+  Alert,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from '@react-native-community/datetimepicker';
 import {useSetRecoilState, useRecoilValue} from 'recoil';
 import {tasksAtom} from '../state/atoms';
-import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
+import {
+  RouteProp,
+  Theme,
+  useNavigation,
+  useRoute,
+  useTheme,
+} from '@react-navigation/native';
 import {priorityColors} from '../utils/constants';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigation/RootNavigator';
+import {Task, TaskPriority} from '../types';
+
+type ParamList = {
+  CreateEditTask: {
+    taskId: string;
+  };
+};
 
 const TaskCreateEditScreen: React.FC = () => {
-  const route = useRoute();
+  const route = useRoute<RouteProp<ParamList, 'CreateEditTask'>>();
   const tasks = useRecoilValue(tasksAtom);
   const setTasks = useSetRecoilState(tasksAtom);
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const {colors} = useTheme();
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  // Initialize state
-  const [task, setTask] = useState({
-    id: '',
+  const [task, setTask] = useState<Task>({
+    id: route.params?.taskId || Date.now().toString(),
     title: '',
     description: '',
-    priority: 'low',
+    priority: TaskPriority.Low,
     dueDate: new Date(),
     completed: false,
   });
 
-  // Check if we are editing an existing task
   const isEditing = route.params && route.params.taskId;
 
   useEffect(() => {
@@ -47,6 +61,10 @@ const TaskCreateEditScreen: React.FC = () => {
   }, [isEditing, route.params, tasks]);
 
   const handleSaveTask = () => {
+    if (!task.title.trim()) {
+      Alert.alert('Error', 'Title cannot be empty.');
+      return;
+    }
     const newTaskList = isEditing
       ? tasks.map(t => (t.id === task.id ? task : t))
       : [...tasks, {...task, id: Date.now().toString()}];
@@ -69,14 +87,17 @@ const TaskCreateEditScreen: React.FC = () => {
     }));
   };
 
-  const handlePriorityPress = (newPriority: string) => {
+  const handlePriorityPress = (newPriority: TaskPriority) => {
     setTask(prevTask => ({
       ...prevTask,
       priority: newPriority,
     }));
   };
 
-  const handleDateChange = (event: Event, selectedDate?: Date) => {
+  const handleDateChange = (
+    event: DateTimePickerEvent,
+    selectedDate?: Date,
+  ) => {
     const currentDate = selectedDate || task.dueDate;
     setShowDatePicker(Platform.OS === 'ios');
     setTask(prevTask => ({
@@ -132,16 +153,13 @@ const TaskCreateEditScreen: React.FC = () => {
       <Text style={[styles.label, {color: colors.text}]}>Due Date:</Text>
       <TouchableOpacity
         onPress={() => setShowDatePicker(true)}
-        style={[
-          styles.input,
-          {borderColor: colors.border, color: colors.text},
-        ]}>
-        <Text style={{color: colors.text}}>{task.dueDate.toDateString()}</Text>
+        style={styles.input}>
+        <Text style={{color: colors.text}}>{task.dueDate?.toDateString()}</Text>
       </TouchableOpacity>
       {showDatePicker && (
         <DateTimePicker
           testID="dateTimePicker"
-          value={task.dueDate}
+          value={task.dueDate || new Date()}
           mode="date"
           display={'default'}
           onChange={handleDateChange}
@@ -157,7 +175,7 @@ const TaskCreateEditScreen: React.FC = () => {
   );
 };
 
-const getStyles = colors =>
+const getStyles = (colors: Theme['colors']) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -177,6 +195,7 @@ const getStyles = colors =>
       borderRadius: 8,
       backgroundColor: colors.card,
       color: colors.text,
+      borderColor: colors.border,
     },
     textarea: {
       height: 100,
