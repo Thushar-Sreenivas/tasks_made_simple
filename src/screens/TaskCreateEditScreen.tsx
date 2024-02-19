@@ -156,7 +156,9 @@ const TaskCreateEditScreen: React.FC = () => {
       <TouchableOpacity
         onPress={() => setShowDatePicker(true)}
         style={styles.input}>
-        <Text style={{color: colors.text}}>{task.dueDate?.toDateString()}</Text>
+        <Text style={{color: colors.text}}>
+          {task.dueDate ? new Date(task.dueDate).toDateString() : 'No date set'}
+        </Text>
       </TouchableOpacity>
       {showDatePicker && (
         <DateTimePicker
