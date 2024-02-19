@@ -1,19 +1,25 @@
-// src/hooks/useClock.ts
-import {useState, useEffect} from 'react';
+import React, {useCallback, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 
-const useClock = (): string => {
-  const [currentTime, setCurrentTime] = useState<string>('');
+const useClock = () => {
+  const [currentTime, setCurrentTime] = useState('');
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      const timeString = now.toLocaleTimeString('en-US');
-      const dateString = now.toLocaleDateString('en-US');
-      setCurrentTime(`${dateString} ${timeString}`);
-    }, 1000);
+  useFocusEffect(
+    useCallback(() => {
+      const interval = setInterval(() => {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('en-US', {hour12: true});
+        const dateString = now.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+        setCurrentTime(`${dateString}, ${timeString}`);
+      }, 1000);
 
-    return () => clearInterval(interval);
-  }, []);
+      return () => clearInterval(interval);
+    }, []),
+  );
 
   return currentTime;
 };
