@@ -1,6 +1,14 @@
 // src/screens/TaskDetailScreen.tsx
 import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  ScrollView,
+  Platform,
+} from 'react-native';
 import {useRecoilState} from 'recoil';
 import {tasksAtom} from '../state/atoms';
 import {Task} from '../types';
@@ -8,12 +16,12 @@ import {
   useNavigation,
   useRoute,
   RouteProp,
-  useTheme,
   Theme,
 } from '@react-navigation/native';
 import {priorityColors} from '../utils/constants';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigation/RootNavigator';
+import {useTheme} from '../hooks/useTheme';
 
 type ParamList = {
   TaskDetail: {
@@ -85,18 +93,34 @@ const TaskDetailScreen: React.FC = () => {
     return new Date(dateString).toLocaleTimeString(undefined, options);
   };
 
+  const getCompletionStatusText = (isCompleted: boolean): string => {
+    return isCompleted ? 'Completed' : 'Not Completed';
+  };
+
   const formattedDueDate: string = task.dueDate
     ? formatDate(task.dueDate)
     : 'No due date set';
   const formattedDueTime: string = task.dueDate ? formatTime(task.dueDate) : '';
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.headerLabel}>Title:</Text>
       <Text style={styles.textValue}>{task.title}</Text>
 
-      <Text style={styles.headerLabel}>Description:</Text>
-      <Text style={styles.textValue}>{task.description}</Text>
+      {task.description ? (
+        <>
+          <Text style={styles.headerLabel}>Description:</Text>
+          <Text style={styles.textValue}>{task.description}</Text>
+        </>
+      ) : null}
+      <Text style={styles.headerLabel}>Status:</Text>
+      <Text
+        style={[
+          styles.textValue,
+          task.completed ? styles.completedText : styles.notCompletedText,
+        ]}>
+        {getCompletionStatusText(task.completed)}
+      </Text>
 
       <Text style={styles.headerLabel}>Priority:</Text>
       <View style={styles.priorityContainer}>
@@ -127,7 +151,7 @@ const TaskDetailScreen: React.FC = () => {
           <Text style={styles.buttonText}>Delete</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -136,6 +160,7 @@ const getStyles = (colors: Theme['colors']) =>
     container: {
       flex: 1,
       padding: 16,
+      marginTop: Platform.OS === 'ios' ? 30 : 0,
       backgroundColor: colors.background,
     },
     timeContainer: {
@@ -167,6 +192,15 @@ const getStyles = (colors: Theme['colors']) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginTop: 16,
+      paddingBottom: 80,
+    },
+    completedText: {
+      textDecorationLine: 'line-through',
+      color: colors.secondaryText,
+    },
+    notCompletedText: {
+      fontWeight: 'bold',
+      color: colors.primaryText,
     },
     button: {
       width: 120,

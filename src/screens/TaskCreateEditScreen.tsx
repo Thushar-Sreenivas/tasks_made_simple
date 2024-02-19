@@ -118,6 +118,7 @@ const TaskCreateEditScreen: React.FC = () => {
         value={task.title}
         placeholder="Enter task title"
         placeholderTextColor={colors.text}
+        scrollEnabled
       />
       <Text style={[styles.label, {color: colors.text}]}>Description:</Text>
       <TextInput
@@ -129,6 +130,7 @@ const TaskCreateEditScreen: React.FC = () => {
         value={task.description}
         placeholder="Enter task description"
         placeholderTextColor={colors.text}
+        scrollEnabled
         multiline
       />
       <Text style={[styles.label, {color: colors.text}]}>Priority:</Text>

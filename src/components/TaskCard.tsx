@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {Text, StyleSheet, TouchableOpacity, Animated, View} from 'react-native';
 import {Task} from '../types';
 import {useNavigation} from '@react-navigation/native';
@@ -31,8 +31,11 @@ const TaskCard = ({task}: TaskCardProps) => {
     Animated.timing(bgColorAnim, {
       toValue: task.completed ? 1 : 0,
       duration: 300,
-      useNativeDriver: false,
+      useNativeDriver: true,
     }).start();
+    return () => {
+      bgColorAnim.stopAnimation();
+    };
   }, [bgColorAnim, task.completed]);
 
   const handleToggleTask = () => {
@@ -48,7 +51,7 @@ const TaskCard = ({task}: TaskCardProps) => {
     outputRange: [colors.cardBackground, '#D6F8D6'],
   });
 
-  const swipeHintAnim = useState(new Animated.Value(0))[0];
+  const swipeHintAnim = useRef(new Animated.Value(0)).current;
 
   const onLongPress = () => {
     Animated.sequence([
